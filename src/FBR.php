@@ -5,12 +5,13 @@ class FBR
 {
     private const CMD_UPLOAD     = 32;
     private const CMD_STATUS     = 64;
-    private const CMD_GET_FACES  = 128;
+    private const CMD_GET_FACES  = 129;
 
+    public const ANS_OK          = 33;
     public const ANS_PROCESSING  = 65;
     public const ANS_ERROR       = 66;
     public const ANS_COMPLETED   = 67;
-    public const ANS_GET_FACES   = 128;
+    public const ANS_GET_FACES   = 129;
 
     /**
      * @var string
