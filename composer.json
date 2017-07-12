@@ -17,6 +17,8 @@
     "require": {
         "psr/cache": "^1.0",
         "php": ">=7.0.0",
-        "ext-curl": "^7.0"
+        "ext-curl": "^7.0",
+        "ext-json": "^1.4",
+        "ext-openssl": "^7.0"
     }
 }
