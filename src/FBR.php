@@ -5,13 +5,17 @@ class FBR
 {
     const CMD_UPLOAD     = 32;
     const CMD_STATUS     = 64;
+    const CMD_GET_USTATS = 80;
+    const CMD_GET_RSTATS = 128;
     const CMD_GET_FACES  = 129;
 
-    const ANS_OK          = 33;
-    const ANS_PROCESSING  = 65;
-    const ANS_ERROR       = 66;
-    const ANS_COMPLETED   = 67;
-    const ANS_GET_FACES   = 129;
+    const ANS_OK         = 33;
+    const ANS_PROCESSING = 65;
+    const ANS_ERROR      = 66;
+    const ANS_COMPLETED  = 67;
+    const ANS_GET_USTATS = 80;
+    const ANS_GET_RSTATS = 128;
+    const ANS_GET_FACES  = 129;
 
     /**
      * @var string
@@ -210,6 +214,83 @@ class FBR
 
         $result = $this->sendRequest($request);
         if ($item && is_object($result) && $result->ans_type != self::ANS_PROCESSING) {
+            $item->set($result);
+            $item->expiresAfter($this->_ttl);
+            $this->_cache->save($item);
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param string $guid
+     * @return string|object
+     */
+    public function getUploadStats(string $guid)
+    {
+        $item = null;
+        if ($this->_cache) {
+            $key  = self::CMD_GET_USTATS . '_' . $guid;
+            $item = $this->_cache->getItem($key);
+            if ($item->isHit()) {
+                return $item->get();
+            }
+        }
+
+        $request = [
+            'req_type'  => self::CMD_GET_USTATS,
+            'data'      => [
+                'reqID_serv'   => $guid,
+                'segment'      => null,
+                'foto'         => null,
+                'ResultNumber' => 0,
+                'par1'         => 0,
+                'par2'         => 0,
+                'comment'      => '',
+            ]
+        ];
+
+        $result = $this->sendRequest($request);
+        if ($item && is_object($result)) {
+            $item->set($result);
+            $item->expiresAfter($this->_ttl);
+            $this->_cache->save($item);
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param string $guid
+     * @param int $n
+     * @return string|object
+     */
+    public function getRecognitionStats(string $guid, int $n)
+    {
+        $item = null;
+        if ($this->_cache) {
+            $key  = self::CMD_GET_RSTATS . '_' . $guid . '_' . $n;
+            $item = $this->_cache->getItem($key);
+            if ($item->isHit()) {
+                return $item->get();
+            }
+        }
+
+        $request = [
+            'req_type'  => self::CMD_GET_RSTATS,
+            'data'      => [
+                'reqID_serv'   => $guid,
+                'segment'      => null,
+                'foto'         => null,
+                'ResultNumber' => $n,
+                'par1'         => 0,
+                'par2'         => 0,
+                'comment'      => '',
+            ]
+        ];
+
+        $result = $this->sendRequest($request);
+        if ($item && is_object($result)) {
             $item->set($result);
             $item->expiresAfter($this->_ttl);
             $this->_cache->save($item);
