@@ -38,6 +38,11 @@ class FBR
     private $_ttl = 3600;
 
     /**
+     * @var \WildWolf\CurlWrapperInterface
+     */
+    private $_curl = null;
+
+    /**
      * @param string $url
      * @param string $client_id
      * @throws \InvalidArgumentException
@@ -58,6 +63,14 @@ class FBR
     public function setCache(\Psr\Cache\CacheItemPoolInterface $cache)
     {
         $this->_cache = $cache;
+    }
+
+    /**
+     * @param \WildWolf\CurlWrapperInterface $w
+     */
+    public function setCurlWrapper(\WildWolf\CurlWrapperInterface $w)
+    {
+        $this->_curl = $w;
     }
 
     /**
@@ -120,8 +133,13 @@ class FBR
 
         $request = json_encode($request);
 
-        $ch = curl_init($this->_url);
-        curl_setopt_array($ch, [
+        if (!$this->_curl) {
+            $this->_curl = new \WildWolf\CurlWrapper();
+        }
+
+        $this->_curl->reset();
+        $this->_curl->setOptions([
+            CURLOPT_URL            => $this->_url,
             CURLOPT_HEADER         => false,
             CURLOPT_POST           => true,
             CURLOPT_HTTPHEADER     => ['Expect:', 'Content-Type: text/json', 'Content-Length:'],
@@ -129,9 +147,8 @@ class FBR
             CURLOPT_RETURNTRANSFER => true,
         ]);
 
-        $response = curl_exec($ch);
-        $code     = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
+        $response = $this->_curl->execute();
+        $code     = $this->_curl->info(CURLINFO_HTTP_CODE);
         return (200 === $code) ? json_decode($response) : $response;
     }
 
