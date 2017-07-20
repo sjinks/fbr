@@ -178,6 +178,24 @@ class Client
         return null;
     }
 
+    private static function prepareFile($r)
+    {
+        if (is_resource($r)) {
+            return self::resourceToBase64($r);
+        }
+
+        if (is_string($r)) {
+            return base64_encode($r);
+        }
+
+        if ($r instanceof \Imagick) {
+            $r->setImageFormat('jpeg');
+            return base64_encode($r->getImageBlob());
+        }
+
+        return null;
+    }
+
     /**
      * @param resource|\Imagick|string $r
      * @throws \InvalidArgumentException
@@ -185,18 +203,7 @@ class Client
      */
     public function uploadFile($r)
     {
-        $data = null;
-        if (is_resource($r)) {
-            $data = self::resourceToBase64($r);
-        }
-        elseif (is_string($r)) {
-            $data = base64_encode($r);
-        }
-        elseif ($r instanceof \Imagick) {
-            $r->setImageFormat("jpeg");
-            $data = base64_encode($r->getImageBlob());
-        }
-
+        $data = self::prepareFile($r);
         if (empty($data)) {
             throw new \InvalidArgumentException();
         }
@@ -217,21 +224,33 @@ class Client
         return $this->sendRequest($request);
     }
 
-    /**
-     * @param string $guid
-     * @return \WildWolf\FBR\Response\UploadAck|\WildWolf\FBR\Response\UploadError|\WildWolf\FBR\Response\InProgress|\WildWolf\FBR\Response\Failed|\WildWolf\FBR\Response\ResultReady|\WildWolf\FBR\Response\Stats|\WildWolf\FBR\Response\MatchStats|\WildWolf\FBR\Response\Match|\WildWolf\FBR\Response\Base
-     */
-    public function checkUploadStatus(string $guid)
+    private function maybeSendRequest(string $key, array $request)
     {
         $item = null;
         if ($this->_cache) {
-            $key  = self::CMD_STATUS . '_' . $guid;
             $item = $this->_cache->getItem($key);
             if ($item->isHit()) {
                 return $item->get();
             }
         }
 
+        $result = $this->sendRequest($request);
+
+        if ($item && $result->cacheable()) {
+            $item->set($result)->expiresAfter($this->_ttl);
+            $this->_cache->save($item);
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param string $guid
+     * @return \WildWolf\FBR\Response\UploadAck|\WildWolf\FBR\Response\UploadError|\WildWolf\FBR\Response\InProgress|\WildWolf\FBR\Response\Failed|\WildWolf\FBR\Response\ResultReady|\WildWolf\FBR\Response\Stats|\WildWolf\FBR\Response\MatchStats|\WildWolf\FBR\Response\Match|\WildWolf\FBR\Response\Base
+     */
+    public function checkUploadStatus(string $guid)
+    {
+        $key     = self::CMD_STATUS . '_' . $guid;
         $request = [
             'req_type'  => self::CMD_STATUS,
             'data'      => [
@@ -245,34 +264,7 @@ class Client
             ],
         ];
 
-        $result = $this->sendRequest($request);
-        if ($item && $result instanceof InProgress) {
-            $item->set($result);
-            $item->expiresAfter($this->_ttl);
-            $this->_cache->save($item);
-        }
-
-        return $result;
-    }
-
-    private function maybeSendRequest(string $key, array $request)
-    {
-        $item = null;
-        if ($this->_cache) {
-            $item = $this->_cache->getItem($key);
-            if ($item->isHit()) {
-                return $item->get();
-            }
-        }
-
-        $result = $this->sendRequest($request);
-
-        if ($item) {
-            $item->set($result)->expiresAfter($this->_ttl);
-            $this->_cache->save($item);
-        }
-
-        return $result;
+        return $this->maybeSendRequest($key, $request);
     }
 
     /**

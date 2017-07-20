@@ -77,4 +77,9 @@ class Base
     {
         return $this->comment;
     }
+
+    public function cacheable()
+    {
+        return true;
+    }
 }
