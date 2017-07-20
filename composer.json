@@ -1,5 +1,6 @@
 {
     "name": "wildwolf/fbr",
+    "description": "API to a private face recognition/match system",
     "license": "MIT",
     "authors": [
         {
