@@ -2,6 +2,9 @@
 
 namespace WildWolf\FBR\Response;
 
+/**
+ * @property array $fotos
+ */
 trait ArrayTraits
 {
     private $current = 0;

@@ -4,6 +4,8 @@ namespace WildWolf\FBR;
 
 trait FaceTraits
 {
+    private $face;
+
     public function face() : string
     {
         return $this->face;

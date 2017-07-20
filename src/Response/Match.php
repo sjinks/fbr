@@ -14,15 +14,15 @@ class Match extends Base implements \Countable, \Iterator, \ArrayAccess
 
         $matches = [];
         foreach ($this->fotos as $x) {
-            $number      = (int)$x->par1;
-            $idx         = (int)$x->par2;
-            $similarity  = (int)$x->par3;
-            $path        = (string)$x->path;
-            $face        = (string)$x->foto;
+            $number        = (int)$x->par1;
+            $idx           = (int)$x->par2;
+            $similarity    = (int)$x->par3;
+            $path          = (string)$x->path;
+            $face          = (string)$x->foto;
 
-            $faces[$idx] = new FaceMatch($number, $similarity, $max, $face, $path);
+            $matches[$idx] = new FaceMatch($number, $similarity, $face, $path);
         }
 
-        $this->fotos = $faces;
+        $this->fotos = $matches;
     }
 }

@@ -8,12 +8,11 @@ class RecognizedFace
 
     private $min_confidence;
     private $max_confidence;
-    private $face;
 
     public function __construct(int $min, int $max, string $face)
     {
-        $this->min_confidence= $min;
-        $this->max_confidence= $max;
+        $this->min_confidence = $min;
+        $this->max_confidence = $max;
         $this->face           = $face;
     }
 

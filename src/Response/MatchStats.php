@@ -2,7 +2,7 @@
 
 namespace WildWolf\FBR\Response;
 
-use WildWolf\FBR\MatchStats as Stats;
+use WildWolf\FBR\MatchStats as MStats;
 
 class MatchStats extends Base implements \Countable, \Iterator, \ArrayAccess
 {
@@ -18,7 +18,7 @@ class MatchStats extends Base implements \Countable, \Iterator, \ArrayAccess
             $min     = (int)$x->par2;
             $max     = (int)$x->par3;
 
-            $faces[] = new Stats($cnt, $min, $max);
+            $faces[] = new MStats($cnt, $min, $max);
         }
 
         $this->fotos = $faces;

@@ -8,7 +8,6 @@ class Match
 
     private $number;
     private $similarity;
-    private $face;
     private $path;
 
     public function __construct(int $nr, int $similarity, string $face, string $path)
