@@ -1,9 +1,12 @@
 <?php
 
+use WildWolf\FBR\Client;
+use WildWolf\FBR\Response\InProgress;
+
 class CheckStatusTest extends PHPUnit\Framework\TestCase
 {
     /**
-     * @var \FBR\FBR
+     * @var \WildWolf\FBR\Client
      */
     private $_fbr;
 
@@ -30,7 +33,7 @@ class CheckStatusTest extends PHPUnit\Framework\TestCase
 
     protected function setUp()
     {
-        $this->_fbr  = new \FBR\FBR('http://localhost/', 'client');
+        $this->_fbr  = new Client('http://localhost/', 'client');
         $this->_curl = new CurlTestWrapper();
 
         $this->_curl->setInfo(CURLINFO_HTTP_CODE, 200);
@@ -45,9 +48,9 @@ class CheckStatusTest extends PHPUnit\Framework\TestCase
 
         $result = $this->_fbr->checkUploadStatus('5388f2d4-ce95-44e3-9b14-7c56a9472725');
         $post   = $this->_curl->getOption(CURLOPT_POSTFIELDS);
-        $obj    = json_decode(json_encode(self::$_arr65));
 
-        $this->assertEquals($obj, $result);
+        $this->assertInstanceOf(InProgress::class, $result);
+
         $this->assertTrue($this->_curl->getOption(CURLOPT_POST));
         $this->assertRegExp('/^[0-9a-fA-F]+\r\n/', $post);
         $this->assertRegExp('/\r\n0\r\n\r\n$/', $post);
@@ -59,7 +62,7 @@ class CheckStatusTest extends PHPUnit\Framework\TestCase
         $req = json_decode($m[1]);
         $this->assertTrue(is_object($req));
 
-        $this->assertEquals(\FBR\FBR::CMD_STATUS, $req->req_type);
+        $this->assertEquals(Client::CMD_STATUS, $req->req_type);
         $this->assertNotEmpty($req->data->reqID_serv);
         $this->assertEmpty($req->data->foto);
     }

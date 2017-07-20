@@ -1,21 +1,18 @@
 <?php
-namespace FBR;
 
-class FBR
+namespace WildWolf\FBR;
+
+use WildWolf\FBR\ResponseFactory;
+use WildWolf\FBR\Response\Base;
+use WildWolf\FBR\Response\InProgress;
+
+class Client
 {
     const CMD_UPLOAD     = 32;
     const CMD_STATUS     = 64;
     const CMD_GET_USTATS = 80;
     const CMD_GET_RSTATS = 128;
     const CMD_GET_FACES  = 129;
-
-    const ANS_OK         = 33;
-    const ANS_PROCESSING = 65;
-    const ANS_ERROR      = 66;
-    const ANS_COMPLETED  = 67;
-    const ANS_GET_USTATS = 80;
-    const ANS_GET_RSTATS = 128;
-    const ANS_GET_FACES  = 129;
 
     /**
      * @var string
@@ -83,7 +80,7 @@ class FBR
 
     /**
      * @param string $client_id
-     * @return \FBR\FBR
+     * @return \WildWolf\FBR\Client
      */
     public function setClientId(string $client_id) : \FBR\FBR
     {
@@ -101,7 +98,7 @@ class FBR
 
     /**
      * @param int $ttl
-     * @return \FBR\FBR
+     * @return \WildWolf\FBR\Client
      */
     public function setTtl(int $ttl) : \FBR\FBR
     {
@@ -122,7 +119,8 @@ class FBR
 
     /**
      * @param array $request
-     * @return string|object
+     * @throws \WildWolf\FBR\Exception
+     * @return \WildWolf\FBR\Response\UploadAck|\WildWolf\FBR\Response\UploadError|\WildWolf\FBR\Response\InProgress|\WildWolf\FBR\Response\Failed|\WildWolf\FBR\Response\ResultReady|\WildWolf\FBR\Response\Stats|\WildWolf\FBR\Response\MatchStats|\WildWolf\FBR\Response\Match|\WildWolf\FBR\Response\Base
      */
     private function sendRequest(array $request)
     {
@@ -149,13 +147,21 @@ class FBR
 
         $response = $this->_curl->execute();
         $code     = $this->_curl->info(CURLINFO_HTTP_CODE);
-        return (200 === $code) ? json_decode($response) : $response;
+
+        if ($code === 200) {
+            $obj = json_decode($response);
+            if (is_object($obj) && isset($obj->ans_type)) {
+                return ResponseFactory::create($obj);
+            }
+        }
+
+        throw new Exception($response, $code);
     }
 
     /**
      * @param resource|\Imagick|string $r
      * @throws \InvalidArgumentException
-     * @return string|object
+     * @return \WildWolf\FBR\Response\UploadAck|\WildWolf\FBR\Response\UploadError|\WildWolf\FBR\Response\InProgress|\WildWolf\FBR\Response\Failed|\WildWolf\FBR\Response\ResultReady|\WildWolf\FBR\Response\Stats|\WildWolf\FBR\Response\MatchStats|\WildWolf\FBR\Response\Match|\WildWolf\FBR\Response\Base
      */
     public function uploadFile($r)
     {
@@ -203,7 +209,7 @@ class FBR
 
     /**
      * @param string $guid
-     * @return string|object
+     * @return \WildWolf\FBR\Response\UploadAck|\WildWolf\FBR\Response\UploadError|\WildWolf\FBR\Response\InProgress|\WildWolf\FBR\Response\Failed|\WildWolf\FBR\Response\ResultReady|\WildWolf\FBR\Response\Stats|\WildWolf\FBR\Response\MatchStats|\WildWolf\FBR\Response\Match|\WildWolf\FBR\Response\Base
      */
     public function checkUploadStatus(string $guid)
     {
@@ -230,7 +236,7 @@ class FBR
         ];
 
         $result = $this->sendRequest($request);
-        if ($item && is_object($result) && $result->ans_type != self::ANS_PROCESSING) {
+        if ($item && $result instanceof InProgress) {
             $item->set($result);
             $item->expiresAfter($this->_ttl);
             $this->_cache->save($item);
@@ -241,7 +247,7 @@ class FBR
 
     /**
      * @param string $guid
-     * @return string|object
+     * @return \WildWolf\FBR\Response\UploadAck|\WildWolf\FBR\Response\UploadError|\WildWolf\FBR\Response\InProgress|\WildWolf\FBR\Response\Failed|\WildWolf\FBR\Response\ResultReady|\WildWolf\FBR\Response\Stats|\WildWolf\FBR\Response\MatchStats|\WildWolf\FBR\Response\Match|\WildWolf\FBR\Response\Base
      */
     public function getUploadStats(string $guid)
     {
@@ -268,7 +274,7 @@ class FBR
         ];
 
         $result = $this->sendRequest($request);
-        if ($item && is_object($result)) {
+        if ($item) {
             $item->set($result);
             $item->expiresAfter($this->_ttl);
             $this->_cache->save($item);
@@ -280,7 +286,7 @@ class FBR
     /**
      * @param string $guid
      * @param int $n
-     * @return string|object
+     * @return \WildWolf\FBR\Response\UploadAck|\WildWolf\FBR\Response\UploadError|\WildWolf\FBR\Response\InProgress|\WildWolf\FBR\Response\Failed|\WildWolf\FBR\Response\ResultReady|\WildWolf\FBR\Response\Stats|\WildWolf\FBR\Response\MatchStats|\WildWolf\FBR\Response\Match|\WildWolf\FBR\Response\Base
      */
     public function getRecognitionStats(string $guid, int $n)
     {
@@ -307,7 +313,7 @@ class FBR
         ];
 
         $result = $this->sendRequest($request);
-        if ($item && is_object($result)) {
+        if ($item) {
             $item->set($result);
             $item->expiresAfter($this->_ttl);
             $this->_cache->save($item);
@@ -320,13 +326,13 @@ class FBR
      * @param string $guid
      * @param int $n
      * @param int $count
-     * @return string|object
+     * @return \WildWolf\FBR\Response\UploadAck|\WildWolf\FBR\Response\UploadError|\WildWolf\FBR\Response\InProgress|\WildWolf\FBR\Response\Failed|\WildWolf\FBR\Response\ResultReady|\WildWolf\FBR\Response\Stats|\WildWolf\FBR\Response\MatchStats|\WildWolf\FBR\Response\Match|\WildWolf\FBR\Response\Base
      */
-    public function getFaces(string $guid, int $n, int $count = 20)
+    public function getFaces(string $guid, int $n, int $offset, int $count = 20)
     {
         $item = null;
         if ($this->_cache) {
-            $key  = self::CMD_GET_FACES . '_' . $guid . '_' . $n . '_' . $count;
+            $key  = self::CMD_GET_FACES . '_' . $guid . '_' . $n . '_' . $offset . '_' . $count;
             $item = $this->_cache->getItem($key);
             if ($item->isHit()) {
                 return $item->get();
@@ -340,14 +346,14 @@ class FBR
                 'segment'      => null,
                 'foto'         => null,
                 'ResultNumber' => $n,
-                'par1'         => 0,
+                'par1'         => $offset,
                 'par2'         => $count,
                 'comment'      => '',
             ]
         ];
 
         $result = $this->sendRequest($request);
-        if ($item && is_object($result)) {
+        if ($item) {
             $item->set($result);
             $item->expiresAfter($this->_ttl);
             $this->_cache->save($item);

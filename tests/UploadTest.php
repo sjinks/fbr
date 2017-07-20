@@ -1,9 +1,12 @@
 <?php
 
+use WildWolf\FBR\Client;
+use WildWolf\FBR\Response\UploadAck;
+
 class UploadTest extends PHPUnit\Framework\TestCase
 {
     /**
-     * @var \FBR\FBR
+     * @var \WildWolf\FBR\Client
      */
     private $_fbr;
 
@@ -30,7 +33,7 @@ class UploadTest extends PHPUnit\Framework\TestCase
 
     protected function setUp()
     {
-        $this->_fbr  = new \FBR\FBR('http://localhost/', 'client');
+        $this->_fbr  = new Client('http://localhost/', 'client');
         $this->_curl = new CurlTestWrapper();
 
         $content = json_encode(self::$_arr);
@@ -81,11 +84,10 @@ class UploadTest extends PHPUnit\Framework\TestCase
     private function commonChecks($r, bool $checkFile = false)
     {
         $result = $this->_fbr->uploadFile($r);
-
         $post   = $this->_curl->getOption(CURLOPT_POSTFIELDS);
-        $obj    = json_decode(json_encode(self::$_arr));
 
-        $this->assertEquals($obj, $result);
+        $this->assertInstanceOf(UploadAck::class, $result);
+
         $this->assertTrue($this->_curl->getOption(CURLOPT_POST));
         $this->assertRegExp('/^[0-9a-fA-F]+\r\n/', $post);
         $this->assertRegExp('/\r\n0\r\n\r\n$/', $post);
@@ -97,7 +99,7 @@ class UploadTest extends PHPUnit\Framework\TestCase
         $req = json_decode($m[1]);
         $this->assertTrue(is_object($req));
 
-        $this->assertEquals(\FBR\FBR::CMD_UPLOAD, $req->req_type);
+        $this->assertEquals(Client::CMD_UPLOAD, $req->req_type);
         $this->assertEmpty($req->data->reqID_serv);
         $this->assertNotEmpty($req->data->foto);
 
