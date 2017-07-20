@@ -82,7 +82,7 @@ class Client
      * @param string $client_id
      * @return \WildWolf\FBR\Client
      */
-    public function setClientId(string $client_id) : \FBR\FBR
+    public function setClientId(string $client_id) : \WildWolf\FBR\Client
     {
         $this->_client_id = $client_id;
         return $this;
@@ -100,7 +100,7 @@ class Client
      * @param int $ttl
      * @return \WildWolf\FBR\Client
      */
-    public function setTtl(int $ttl) : \FBR\FBR
+    public function setTtl(int $ttl) : \WildWolf\FBR\Client
     {
         $this->_ttl = $ttl;
         return $this;
@@ -158,6 +158,21 @@ class Client
         throw new Exception($response, $code);
     }
 
+    private static function resourceToBase64($r)
+    {
+        switch (get_resource_type($r)) {
+            case 'stream':
+                return base64_encode(stream_get_contents($r));
+
+            case 'gd':
+                ob_start();
+                imagejpeg($r);
+                return base64_encode(ob_get_clean());
+        }
+
+        return null;
+    }
+
     /**
      * @param resource|\Imagick|string $r
      * @throws \InvalidArgumentException
@@ -167,27 +182,17 @@ class Client
     {
         $data = null;
         if (is_resource($r)) {
-            switch (get_resource_type($r)) {
-                case 'stream':
-                    $data = base64_encode(stream_get_contents($r));
-                    break;
-
-                case 'gd':
-                    ob_start();
-                    imagejpeg($r);
-                    $data = base64_encode(ob_get_clean());
-                    break;
-            }
+            $data = self::resourceToBase64($r);
         }
         elseif (is_string($r)) {
             $data = base64_encode($r);
         }
-        elseif (is_object($r) && $r instanceof \Imagick) {
+        elseif ($r instanceof \Imagick) {
             $r->setImageFormat("jpeg");
             $data = base64_encode($r->getImageBlob());
         }
 
-        if (!$data) {
+        if (empty($data)) {
             throw new \InvalidArgumentException();
         }
 
@@ -245,21 +250,33 @@ class Client
         return $result;
     }
 
-    /**
-     * @param string $guid
-     * @return \WildWolf\FBR\Response\UploadAck|\WildWolf\FBR\Response\UploadError|\WildWolf\FBR\Response\InProgress|\WildWolf\FBR\Response\Failed|\WildWolf\FBR\Response\ResultReady|\WildWolf\FBR\Response\Stats|\WildWolf\FBR\Response\MatchStats|\WildWolf\FBR\Response\Match|\WildWolf\FBR\Response\Base
-     */
-    public function getUploadStats(string $guid)
+    private function maybeSendRequest(string $key, array $request)
     {
         $item = null;
         if ($this->_cache) {
-            $key  = self::CMD_GET_USTATS . '_' . $guid;
             $item = $this->_cache->getItem($key);
             if ($item->isHit()) {
                 return $item->get();
             }
         }
 
+        $result = $this->sendRequest($request);
+
+        if ($item) {
+            $item->set($result)->expiresAfter($this->_ttl);
+            $this->_cache->save($item);
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param string $guid
+     * @return \WildWolf\FBR\Response\UploadAck|\WildWolf\FBR\Response\UploadError|\WildWolf\FBR\Response\InProgress|\WildWolf\FBR\Response\Failed|\WildWolf\FBR\Response\ResultReady|\WildWolf\FBR\Response\Stats|\WildWolf\FBR\Response\MatchStats|\WildWolf\FBR\Response\Match|\WildWolf\FBR\Response\Base
+     */
+    public function getUploadStats(string $guid)
+    {
+        $key     = self::CMD_GET_USTATS . '_' . $guid;
         $request = [
             'req_type'  => self::CMD_GET_USTATS,
             'data'      => [
@@ -273,14 +290,7 @@ class Client
             ]
         ];
 
-        $result = $this->sendRequest($request);
-        if ($item) {
-            $item->set($result);
-            $item->expiresAfter($this->_ttl);
-            $this->_cache->save($item);
-        }
-
-        return $result;
+        return $this->maybeSendRequest($key, $request);
     }
 
     /**
@@ -290,15 +300,7 @@ class Client
      */
     public function getRecognitionStats(string $guid, int $n)
     {
-        $item = null;
-        if ($this->_cache) {
-            $key  = self::CMD_GET_RSTATS . '_' . $guid . '_' . $n;
-            $item = $this->_cache->getItem($key);
-            if ($item->isHit()) {
-                return $item->get();
-            }
-        }
-
+        $key     = self::CMD_GET_RSTATS . '_' . $guid . '_' . $n;
         $request = [
             'req_type'  => self::CMD_GET_RSTATS,
             'data'      => [
@@ -312,14 +314,7 @@ class Client
             ]
         ];
 
-        $result = $this->sendRequest($request);
-        if ($item) {
-            $item->set($result);
-            $item->expiresAfter($this->_ttl);
-            $this->_cache->save($item);
-        }
-
-        return $result;
+        return $this->maybeSendRequest($key, $request);
     }
 
     /**
@@ -330,15 +325,7 @@ class Client
      */
     public function getFaces(string $guid, int $n, int $offset, int $count = 20)
     {
-        $item = null;
-        if ($this->_cache) {
-            $key  = self::CMD_GET_FACES . '_' . $guid . '_' . $n . '_' . $offset . '_' . $count;
-            $item = $this->_cache->getItem($key);
-            if ($item->isHit()) {
-                return $item->get();
-            }
-        }
-
+        $key     = self::CMD_GET_FACES . '_' . $guid . '_' . $n . '_' . $offset . '_' . $count;
         $request = [
             'req_type'  => self::CMD_GET_FACES,
             'data'      => [
@@ -352,13 +339,6 @@ class Client
             ]
         ];
 
-        $result = $this->sendRequest($request);
-        if ($item) {
-            $item->set($result);
-            $item->expiresAfter($this->_ttl);
-            $this->_cache->save($item);
-        }
-
-        return $result;
+        return $this->maybeSendRequest($key, $request);
     }
 }
