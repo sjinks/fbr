@@ -23,6 +23,7 @@ class Match extends Base implements \Countable, \Iterator, \ArrayAccess
             $matches[$idx] = new FaceMatch($number, $similarity, $face, $path);
         }
 
+        ksort($matches);
         $this->fotos = $matches;
     }
 }

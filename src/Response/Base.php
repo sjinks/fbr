@@ -78,6 +78,11 @@ class Base
         return $this->comment;
     }
 
+    public function resultsAmount()
+    {
+        return $this->results_amount;
+    }
+
     public function cacheable()
     {
         return true;

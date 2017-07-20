@@ -22,6 +22,7 @@ class Stats extends Base implements \Countable, \Iterator, \ArrayAccess
             $faces[$idx-1] = new RecognizedFace($min, $max, $face);
         }
 
+        ksort($faces);
         $this->fotos = $faces;
     }
 }

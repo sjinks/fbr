@@ -320,7 +320,7 @@ class Client
      * @param int $count
      * @return \WildWolf\FBR\Response\UploadAck|\WildWolf\FBR\Response\UploadError|\WildWolf\FBR\Response\InProgress|\WildWolf\FBR\Response\Failed|\WildWolf\FBR\Response\ResultReady|\WildWolf\FBR\Response\Stats|\WildWolf\FBR\Response\MatchStats|\WildWolf\FBR\Response\Match|\WildWolf\FBR\Response\Base
      */
-    public function getFaces(string $guid, int $n, int $offset, int $count = 20)
+    public function getFaces(string $guid, int $n, int $offset = 0, int $count = 20)
     {
         $key     = self::CMD_GET_FACES . '_' . $guid . '_' . $n . '_' . $offset . '_' . $count;
         $request = [

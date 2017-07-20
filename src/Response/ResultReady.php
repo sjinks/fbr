@@ -18,6 +18,7 @@ class ResultReady extends Base implements \Countable, \Iterator, \ArrayAccess
             $counts[$idx] = $cnt;
         }
 
+        ksort($counts);
         $this->fotos = $counts;
     }
 }
