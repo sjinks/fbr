@@ -117,6 +117,23 @@ class Client
         return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
     }
 
+    private function prepareCurl(string $request)
+    {
+        if (!$this->_curl) {
+            $this->_curl = new \WildWolf\CurlWrapper();
+        }
+
+        $this->_curl->reset();
+        $this->_curl->setOptions([
+            CURLOPT_URL            => $this->_url,
+            CURLOPT_HEADER         => false,
+            CURLOPT_POST           => true,
+            CURLOPT_HTTPHEADER     => ['Expect:', 'Content-Type: text/json', 'Content-Length:'],
+            CURLOPT_POSTFIELDS     => dechex(strlen($request)) . "\r\n" . $request . "\r\n0\r\n\r\n",
+            CURLOPT_RETURNTRANSFER => true,
+        ]);
+    }
+
     /**
      * @param array $request
      * @throws \WildWolf\FBR\Exception
@@ -131,26 +148,14 @@ class Client
 
         $request = json_encode($request);
 
-        if (!$this->_curl) {
-            $this->_curl = new \WildWolf\CurlWrapper();
-        }
-
-        $this->_curl->reset();
-        $this->_curl->setOptions([
-            CURLOPT_URL            => $this->_url,
-            CURLOPT_HEADER         => false,
-            CURLOPT_POST           => true,
-            CURLOPT_HTTPHEADER     => ['Expect:', 'Content-Type: text/json', 'Content-Length:'],
-            CURLOPT_POSTFIELDS     => dechex(strlen($request)) . "\r\n" . $request . "\r\n0\r\n\r\n",
-            CURLOPT_RETURNTRANSFER => true,
-        ]);
+        $this->prepareCurl($request);
 
         $response = $this->_curl->execute();
         $code     = $this->_curl->info(CURLINFO_HTTP_CODE);
 
         if ($code === 200) {
             $obj = json_decode($response);
-            if (is_object($obj) && isset($obj->ans_type)) {
+            if (isset($obj->ans_type)) {
                 return ResponseFactory::create($obj);
             }
         }
