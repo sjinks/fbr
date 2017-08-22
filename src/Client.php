@@ -128,8 +128,8 @@ class Client
             CURLOPT_URL            => $this->_url,
             CURLOPT_HEADER         => false,
             CURLOPT_POST           => true,
-            CURLOPT_HTTPHEADER     => ['Expect:', 'Content-Type: text/json', 'Content-Length:'],
-            CURLOPT_POSTFIELDS     => dechex(strlen($request)) . "\r\n" . $request . "\r\n0\r\n\r\n",
+            CURLOPT_HTTPHEADER     => ['Expect:', 'Content-Type: text/json'],
+            CURLOPT_POSTFIELDS     => $request,
             CURLOPT_RETURNTRANSFER => true,
         ]);
     }
