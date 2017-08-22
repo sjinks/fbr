@@ -52,14 +52,8 @@ class CheckStatusTest extends PHPUnit\Framework\TestCase
         $this->assertInstanceOf(InProgress::class, $result);
 
         $this->assertTrue($this->_curl->getOption(CURLOPT_POST));
-        $this->assertRegExp('/^[0-9a-fA-F]+\r\n/', $post);
-        $this->assertRegExp('/\r\n0\r\n\r\n$/', $post);
 
-        $m = [];
-        $this->assertEquals(1, preg_match('/^[0-9a-fA-F]+\r\n(.*?)\r\n0\r\n\r\n$/s', $post, $m));
-        $this->assertTrue(isset($m[1]));
-
-        $req = json_decode($m[1]);
+        $req = json_decode($post);
         $this->assertTrue(is_object($req));
 
         $this->assertEquals(Client::CMD_STATUS, $req->req_type);
