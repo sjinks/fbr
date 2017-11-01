@@ -39,7 +39,7 @@ class SvcClient extends ClientBase
             'data'      => [
                 'reqID_serv'   => $guid,
                 'segment'      => $segment,
-                'foto'         => $data,
+                'foto'         => '',
                 'ResultNumber' => 0,
                 'par1'         => 0,
                 'par2'         => 0,
@@ -58,7 +58,7 @@ class SvcClient extends ClientBase
             'data'      => [
                 'reqID_serv'   => $guid,
                 'segment'      => $segment,
-                'foto'         => $data,
+                'foto'         => '',
                 'ResultNumber' => 0,
                 'par1'         => $start,
                 'par2'         => $count,

@@ -10,8 +10,8 @@ class QueryFacesStatus extends Base
     {
         parent::__construct($data);
 
-        if ($this->resultCode() == 3) {
-            $this->decodeList($this->fotos);
+        if ($this->resultCode() == 3 && !empty($this->fotos[0]->foto)) {
+            $this->decodeList($this->fotos[0]->foto);
         }
     }
 
