@@ -53,12 +53,12 @@ trait ArrayTraits
         return $offset < count($this->fotos);
     }
 
-    public function offsetSet($offset, $value)
+    public function offsetSet(/** @scrutinizer ignore-unused */$offset, $value)
     {
         throw new \RuntimeException();
     }
 
-    public function offsetUnset($offset)
+    public function offsetUnset(/** @scrutinizer ignore-unused */$offset)
     {
         throw new \RuntimeException();
     }

@@ -66,9 +66,9 @@ abstract class ClientBase
 
     /**
      * @param string $client_id
-     * @return \WildWolf\FBR\Client
+     * @return \WildWolf\FBR\ClientBase
      */
-    public function setClientId(string $client_id) : \WildWolf\FBR\Client
+    public function setClientId(string $client_id) : \WildWolf\FBR\ClientBase
     {
         $this->_client_id = $client_id;
         return $this;
@@ -92,9 +92,9 @@ abstract class ClientBase
 
     /**
      * @param int $ttl
-     * @return \WildWolf\FBR\Client
+     * @return \WildWolf\FBR\ClientBase
      */
-    public function setTtl(int $ttl) : \WildWolf\FBR\Client
+    public function setTtl(int $ttl) : \WildWolf\FBR\ClientBase
     {
         $this->_ttl = $ttl;
         return $this;
