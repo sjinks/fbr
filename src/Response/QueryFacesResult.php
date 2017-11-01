@@ -20,7 +20,7 @@ class QueryFacesResult extends Base
             $name      = (string)$x->namel;
             $path      = (string)$x->path;
 
-            $matches[$idx-1] = new Parts\SavedPhoto($bank, $id, $face, $intname, $name, $path);
+            $data[$idx-1] = new Parts\SavedPhoto($bank, $id, $face, $intname, $name, $path);
         }
 
         $this->fotos = $data;
