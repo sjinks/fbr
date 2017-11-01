@@ -8,10 +8,9 @@ class SvcClient extends ClientBase
     const CMD_QF_STATUS   = 193;
     const CMD_QF_RESULT   = 194;
 
-    protected function sendRequest($request)
+    protected function encodeRequest(array $request) : string
     {
-        $request = "0\r\n" . json_encode($request) . "\r\n0\r\n\r\n";
-        return parent::sendRequest($request);
+        return "0\r\n" . parent::encodeRequest($request) . "\r\n0\r\n\r\n";
     }
 
     public function queryFaces(string $sector, int $segment = 0)
@@ -21,7 +20,7 @@ class SvcClient extends ClientBase
             'data'      => [
                 'reqID_serv'   => '',
                 'segment'      => $segment,
-                'foto'         => $data,
+                'foto'         => '',
                 'ResultNumber' => 0,
                 'par1'         => 0,
                 'par2'         => 0,

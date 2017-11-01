@@ -128,19 +128,24 @@ abstract class ClientBase
         ]);
     }
 
+    protected function encodeRequest(array $request) : string
+    {
+        return json_encode($request);
+    }
+
     /**
-     * @param mixed $request
+     * @param array $request
      * @throws \WildWolf\FBR\Exception
      * @return \WildWolf\FBR\Response\UploadAck|\WildWolf\FBR\Response\UploadError|\WildWolf\FBR\Response\InProgress|\WildWolf\FBR\Response\Failed|\WildWolf\FBR\Response\ResultReady|\WildWolf\FBR\Response\Stats|\WildWolf\FBR\Response\MatchStats|\WildWolf\FBR\Response\Match|\WildWolf\FBR\Response\Base
      */
-    protected function sendRequest($request)
+    protected function sendRequest(array $request)
     {
         $request['signature']          = '';
         $request['data']['client_id']  = $request['data']['client_id'] ?? $this->_client_id;
         $request['data']['reqID_clnt'] = static::guidv4();
         $request['data']['datetime']   = date('d.m.Y H:i:s');
 
-        $request = is_array($request) ? json_encode($request) : $request;
+        $request = $this->encodeRequest($request);
 
         $this->prepareCurl($request);
 
