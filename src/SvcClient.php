@@ -4,9 +4,11 @@ namespace WildWolf\FBR;
 
 class SvcClient extends ClientBase
 {
-    const CMD_QUERY_FACES = 192;
-    const CMD_QF_STATUS   = 193;
-    const CMD_QF_RESULT   = 194;
+    const CMD_QUERY_FACES        = 192;
+    const CMD_QF_STATUS          = 193;
+    const CMD_QF_RESULT          = 194;
+    const CMD_QUERY_FACE_STATS   = 200;
+    const CMD_FACE_STATS_RESULTS = 201;
 
     protected function encodeRequest(array $request) : string
     {
@@ -62,6 +64,43 @@ class SvcClient extends ClientBase
                 'ResultNumber' => 0,
                 'par1'         => $start,
                 'par2'         => $count,
+                'comment'      => '',
+            ],
+        ];
+
+        return $this->maybeSendRequest($key, $request);
+    }
+
+    public function queryFaceStats(int $segment = 0)
+    {
+        $request = [
+            'req_type'  => self::CMD_QUERY_FACE_STATS,
+            'data'      => [
+                'reqID_serv'   => '',
+                'segment'      => $segment,
+                'foto'         => '',
+                'ResultNumber' => 0,
+                'par1'         => 0,
+                'par2'         => 0,
+                'comment'      => '',
+            ],
+        ];
+
+        return $this->sendRequest($request);
+    }
+
+    public function getFaceStatsResult(string $guid, int $segment = 0)
+    {
+        $key     = self::CMD_FACE_STATS_RESULTS . '_' . $guid . '_' . $segment;
+        $request = [
+            'req_type'  => self::CMD_FACE_STATS_RESULTS,
+            'data'      => [
+                'reqID_serv'   => $guid,
+                'segment'      => $segment,
+                'foto'         => '',
+                'ResultNumber' => 0,
+                'par1'         => 0,
+                'par2'         => 0,
                 'comment'      => '',
             ],
         ];

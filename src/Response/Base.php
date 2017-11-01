@@ -19,6 +19,8 @@ class Base
     const TYPE_QUERY_FACES    = 192;
     const TYPE_QF_STATUS      = 193;
     const TYPE_QF_RESULT      = 194;
+    const TYPE_GET_FSTATS     = 200;
+    const TYPE_FSTATS_RESULT  = 201;
 
     protected $ans_type;
     protected $client_id;

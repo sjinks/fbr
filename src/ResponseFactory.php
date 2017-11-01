@@ -18,6 +18,8 @@ use WildWolf\FBR\Response\DBStats;
 use WildWolf\FBR\Response\QueryFacesAck;
 use WildWolf\FBR\Response\QueryFacesStatus;
 use WildWolf\FBR\Response\QueryFacesResult;
+use WildWolf\FBR\Response\QueryFaceStatsAck;
+use WildWolf\FBR\Response\QueryFaceStatsResult;
 
 class ResponseFactory
 {
@@ -39,6 +41,8 @@ class ResponseFactory
             case Base::TYPE_QUERY_FACES:    return new QueryFacesAck($data);
             case Base::TYPE_QF_STATUS:      return new QueryFacesStatus($data);
             case Base::TYPE_QF_RESULT:      return new QueryFacesResult($data);
+            case Base::TYPE_GET_FSTATS:     return new QueryFaceStatsAck($data);
+            case Base::TYPE_FSTATS_RESULT:  return new QueryFaceStatsResult($data);
             default:                        return new Base($data);
         }
     }
