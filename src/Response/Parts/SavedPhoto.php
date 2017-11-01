@@ -20,7 +20,7 @@ class SavedPhoto
         $this->bank    = $bank;
         $this->id      = $id;
         $this->intname = $intname;
-        $this->name    = substr($name, 1, -2 - 1);
+        $this->name    = substr($name, 1, -2);
         $this->face    = $face;
 
         $matches = [];

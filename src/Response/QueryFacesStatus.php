@@ -21,7 +21,7 @@ class QueryFacesStatus extends Base
         $list    = [];
         foreach ($decoded as $x) {
             list($segment, $bank, $id, $intname, $name) = explode('*', $x);
-            $list["{$segment}*{$bank}*{$id}"] = [$intname, substr($name, 1, -2 - 1)];
+            $list["{$segment}*{$bank}*{$id}"] = [$intname, substr($name, 1, -2)];
         }
 
         $this->list = $list;
