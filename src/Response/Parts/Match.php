@@ -1,6 +1,8 @@
 <?php
 
-namespace WildWolf\FBR;
+namespace WildWolf\FBR\Response\Parts;
+
+use WildWolf\FBR\FaceTraits;
 
 class Match
 {

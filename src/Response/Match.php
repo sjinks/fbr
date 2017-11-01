@@ -2,8 +2,6 @@
 
 namespace WildWolf\FBR\Response;
 
-use WildWolf\FBR\Match as FaceMatch;
-
 class Match extends Base implements \Countable, \Iterator, \ArrayAccess
 {
     use ArrayTraits;
@@ -20,7 +18,7 @@ class Match extends Base implements \Countable, \Iterator, \ArrayAccess
             $path          = (string)$x->path;
             $face          = (string)$x->foto;
 
-            $matches[$idx] = new FaceMatch($number, $similarity, $face, $path);
+            $matches[$idx] = new Parts\Match($number, $similarity, $face, $path);
         }
 
         ksort($matches);

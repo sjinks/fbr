@@ -2,8 +2,6 @@
 
 namespace WildWolf\FBR\Response;
 
-use WildWolf\FBR\RecognizedFace;
-
 class Stats extends Base implements \Countable, \Iterator, \ArrayAccess
 {
     use ArrayTraits;
@@ -19,7 +17,7 @@ class Stats extends Base implements \Countable, \Iterator, \ArrayAccess
             $max  = (int)$x->par3;
             $face = (string)$x->foto;
 
-            $faces[$idx-1] = new RecognizedFace($min, $max, $face);
+            $faces[$idx-1] = new Parts\RecognizedFace($min, $max, $face);
         }
 
         ksort($faces);

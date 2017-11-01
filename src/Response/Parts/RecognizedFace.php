@@ -1,23 +1,21 @@
 <?php
 
-namespace WildWolf\FBR;
+namespace WildWolf\FBR\Response\Parts;
 
-class MatchStats
+use WildWolf\FBR\FaceTraits;
+
+class RecognizedFace
 {
-    private $results;
+    use FaceTraits;
+
     private $min_confidence;
     private $max_confidence;
 
-    public function __construct(int $cnt, int $min, int $max)
+    public function __construct(int $min, int $max, string $face)
     {
-        $this->results        = $cnt;
         $this->min_confidence = $min;
         $this->max_confidence = $max;
-    }
-
-    public function numberOfResults() : int
-    {
-        return $this->results;
+        $this->face           = $face;
     }
 
     public function minConfidence() : int
@@ -28,5 +26,10 @@ class MatchStats
     public function maxConfidence() : int
     {
         return $this->max_confidence;
+    }
+
+    public function found() : bool
+    {
+        return $this->max_confidence > 0;
     }
 }
