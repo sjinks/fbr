@@ -3,29 +3,32 @@
 namespace WildWolf\FBR;
 
 use WildWolf\FBR\Response\Base;
-use WildWolf\FBR\Response\InProgress;
 
 class Client extends ClientBase
 {
-    const CMD_GET_DBSTATS = 8;
-    const CMD_START_CMP   = 16;
-    const CMD_UPLOAD_REF  = 17;
-    const CMD_CMP_RESULTS = 18;
-    const CMD_UPLOAD      = 32;
-    const CMD_STATUS      = 64;
-    const CMD_GET_USTATS  = 80;
-    const CMD_GET_RSTATS  = 128;
-    const CMD_GET_FACES   = 129;
+    const CMD_GET_DBSTATS    = 8;
+    const CMD_START_CMP      = 16;
+    const CMD_UPLOAD_REF     = 17;
+    const CMD_CMP_RESULTS    = 18;
+    const CMD_UPLOAD_SRCH    = 32;
+    const CMD_SRCH_STATUS    = 64;
+    const CMD_CAPTURED_FACES = 80;
+    const CMD_RCGN_STATS     = 128;
+    const CMD_MATCHED_FACES  = 129;
 
     /**
+     * Initial request to recognize and search for faces.
+     * Photo $r is sent to the server, the server acknowledges the upload (SearchUploadAck)
+     * or returns an error (SearchUploadError)
+     *
      * @param resource|\Imagick|string $r
      * @param int $priority
      * @param mixed $segment
      * @param string $comment
      * @throws \InvalidArgumentException
-     * @return \WildWolf\FBR\Response\UploadAck|\WildWolf\FBR\Response\UploadError|\WildWolf\FBR\Response\InProgress|\WildWolf\FBR\Response\Failed|\WildWolf\FBR\Response\ResultReady|\WildWolf\FBR\Response\Stats|\WildWolf\FBR\Response\MatchStats|\WildWolf\FBR\Response\Match|\WildWolf\FBR\Response\Base
+     * @return \WildWolf\FBR\Response\SearchUploadAck|\WildWolf\FBR\Response\SearchUploadError|\WildWolf\FBR\Response\Base
      */
-    public function uploadFile($r, int $priority = 2, $segment = 0, $comment = '')
+    public function uploadPhotoForSearch($r, int $priority = 2, $segment = 0, $comment = '')
     {
         static $lut = [0 => 'A', 1 => 'B', 2 => 'C'];
 
@@ -35,7 +38,7 @@ class Client extends ClientBase
         }
 
         $request = [
-            'req_type'  => self::CMD_UPLOAD,
+            'req_type'  => self::CMD_UPLOAD_SRCH,
             'data'      => [
                 'reqID_serv'   => '',
                 'segment'      => $segment,
@@ -52,15 +55,18 @@ class Client extends ClientBase
     }
 
     /**
+     * Queries search status ($guid is data.reqID_serv from SearchUploadAck).
+     * Returns SearchInProgress, SearchFailed, or SearchCompleted
+     *
      * @param string $guid
-     * * @param mixed $segment
-     * @return \WildWolf\FBR\Response\UploadAck|\WildWolf\FBR\Response\UploadError|\WildWolf\FBR\Response\InProgress|\WildWolf\FBR\Response\Failed|\WildWolf\FBR\Response\ResultReady|\WildWolf\FBR\Response\Stats|\WildWolf\FBR\Response\MatchStats|\WildWolf\FBR\Response\Match|\WildWolf\FBR\Response\Base
+     * @param mixed $segment
+     * @return \WildWolf\FBR\Response\SearchInProgress|\WildWolf\FBR\Response\SearchFailed|\WildWolf\FBR\Response\SearchCompleted|\WildWolf\FBR\Response\Base
      */
-    public function checkUploadStatus(string $guid, $segment = 0)
+    public function checkSearchStatus(string $guid, $segment = 0)
     {
-        $key     = self::CMD_STATUS . '_' . $guid . '_' . $segment;
+        $key     = self::CMD_SRCH_STATUS . '_' . $guid . '_' . $segment;
         $request = [
-            'req_type'  => self::CMD_STATUS,
+            'req_type'  => self::CMD_SRCH_STATUS,
             'data'      => [
                 'reqID_serv'   => $guid,
                 'segment'      => $segment,
@@ -76,15 +82,17 @@ class Client extends ClientBase
     }
 
     /**
+     * Gets captured faces
+     *
      * @param string $guid
      * @param mixed $segment
-     * @return \WildWolf\FBR\Response\UploadAck|\WildWolf\FBR\Response\UploadError|\WildWolf\FBR\Response\InProgress|\WildWolf\FBR\Response\Failed|\WildWolf\FBR\Response\ResultReady|\WildWolf\FBR\Response\Stats|\WildWolf\FBR\Response\MatchStats|\WildWolf\FBR\Response\Match|\WildWolf\FBR\Response\Base
+     * @return \WildWolf\FBR\Response\CapturedFaces|\WildWolf\FBR\Response\Base
      */
-    public function getUploadStats(string $guid, $segment = 0)
+    public function getCapturedFaces(string $guid, $segment = 0)
     {
-        $key     = self::CMD_GET_USTATS . '_' . $guid . '_' . $segment;
+        $key     = self::CMD_CAPTURED_FACES. '_' . $guid . '_' . $segment;
         $request = [
-            'req_type'  => self::CMD_GET_USTATS,
+            'req_type'  => self::CMD_CAPTURED_FACES,
             'data'      => [
                 'reqID_serv'   => $guid,
                 'segment'      => $segment,
@@ -100,16 +108,18 @@ class Client extends ClientBase
     }
 
     /**
+     * Get recognition statistics (number of matches, minimum similarity, maximum similarity)
+     *
      * @param string $guid
      * @param int $n
      * @param mixed $segment
-     * @return \WildWolf\FBR\Response\UploadAck|\WildWolf\FBR\Response\UploadError|\WildWolf\FBR\Response\InProgress|\WildWolf\FBR\Response\Failed|\WildWolf\FBR\Response\ResultReady|\WildWolf\FBR\Response\Stats|\WildWolf\FBR\Response\MatchStats|\WildWolf\FBR\Response\Match|\WildWolf\FBR\Response\Base
+     * @return \WildWolf\FBR\Response\RecognitionStats|\WildWolf\FBR\Response\Base
      */
     public function getRecognitionStats(string $guid, int $n, $segment = 0)
     {
-        $key     = self::CMD_GET_RSTATS . '_' . $guid . '_' . $n . '_' . $segment;
+        $key     = self::CMD_RCGN_STATS . '_' . $guid . '_' . $n . '_' . $segment;
         $request = [
-            'req_type'  => self::CMD_GET_RSTATS,
+            'req_type'  => self::CMD_RCGN_STATS,
             'data'      => [
                 'reqID_serv'   => $guid,
                 'segment'      => $segment,
@@ -125,17 +135,19 @@ class Client extends ClientBase
     }
 
     /**
+     * Get matched faces
+     *
      * @param string $guid
-     * @param int $n
+     * @param int $n Result number (1-based)
      * @param int $count
      * @param mixed $segment
-     * @return \WildWolf\FBR\Response\UploadAck|\WildWolf\FBR\Response\UploadError|\WildWolf\FBR\Response\InProgress|\WildWolf\FBR\Response\Failed|\WildWolf\FBR\Response\ResultReady|\WildWolf\FBR\Response\Stats|\WildWolf\FBR\Response\MatchStats|\WildWolf\FBR\Response\Match|\WildWolf\FBR\Response\Base
+     * @return \WildWolf\FBR\Response\MatchedFaces|\WildWolf\FBR\Response\Base
      */
-    public function getFaces(string $guid, int $n, int $offset = 0, int $count = 20, $segment = 0)
+    public function getMatchedFaces(string $guid, int $n, int $offset = 0, int $count = 20, $segment = 0)
     {
-        $key     = self::CMD_GET_FACES . '_' . $guid . '_' . $n . '_' . $offset . '_' . $count . '_' . $segment;
+        $key     = self::CMD_MATCHED_FACES. '_' . $guid . '_' . $n . '_' . $offset . '_' . $count . '_' . $segment;
         $request = [
-            'req_type'  => self::CMD_GET_FACES,
+            'req_type'  => self::CMD_MATCHED_FACES,
             'data'      => [
                 'reqID_serv'   => $guid,
                 'segment'      => $segment,

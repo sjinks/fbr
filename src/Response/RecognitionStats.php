@@ -2,7 +2,7 @@
 
 namespace WildWolf\FBR\Response;
 
-class MatchStats extends Base implements \Countable, \Iterator, \ArrayAccess
+class RecognitionStats extends Base implements \Countable, \Iterator, \ArrayAccess
 {
     use ArrayTraits;
 

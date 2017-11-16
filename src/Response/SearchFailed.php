@@ -2,6 +2,6 @@
 
 namespace WildWolf\FBR\Response;
 
-class Failed extends Base
+class SearchFailed extends Base
 {
 }

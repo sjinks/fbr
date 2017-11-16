@@ -2,7 +2,7 @@
 
 namespace WildWolf\FBR\Response;
 
-class Stats extends Base implements \Countable, \Iterator, \ArrayAccess
+class CapturedFaces extends Base implements \Countable, \Iterator, \ArrayAccess
 {
     use ArrayTraits;
 
@@ -17,7 +17,7 @@ class Stats extends Base implements \Countable, \Iterator, \ArrayAccess
             $max  = (int)$x->par3;
             $face = (string)$x->foto;
 
-            $faces[$idx-1] = new Parts\RecognizedFace($min, $max, $face);
+            $faces[$idx-1] = new Parts\CapturedFace($min, $max, $face);
         }
 
         ksort($faces);

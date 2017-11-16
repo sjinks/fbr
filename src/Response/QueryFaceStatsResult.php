@@ -19,8 +19,8 @@ class QueryFaceStatsResult extends Base
         $decoded = array_map('trim', explode("\n", trim(base64_decode($encoded))));
         $list    = [];
         foreach ($decoded as $x) {
-            list($id, $count) = explode('*', $x);
-            $list[$id] = $count;
+            list($sector, $count) = explode('*', $x);
+            $list[strtolower($sector)] = $count;
         }
 
         $this->list = $list;

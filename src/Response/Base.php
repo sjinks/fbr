@@ -4,23 +4,23 @@ namespace WildWolf\FBR\Response;
 
 class Base
 {
-    const TYPE_GET_DBSTATS    =   8;
-    const TYPE_START_CMP_ACK  =  16;
-    const TYPE_UPLOAD_CMP_ACK =  17;
-    const TYPE_CMP_COMPLETED  =  18;
-    const TYPE_UPLOAD_ACK     =  33;
-    const TYPE_UPLOAD_ERR     =  34;
-    const TYPE_IN_PROGRESS    =  65;
-    const TYPE_FAILED         =  66;
-    const TYPE_COMPLETED      =  67;
-    const TYPE_GET_RSTATS     =  80;
-    const TYPE_GET_MSTATS     = 128;
-    const TYPE_GET_FACES      = 129;
-    const TYPE_QUERY_FACES    = 192;
-    const TYPE_QF_STATUS      = 193;
-    const TYPE_QF_RESULT      = 194;
-    const TYPE_GET_FSTATS     = 200;
-    const TYPE_FSTATS_RESULT  = 201;
+    const TYPE_GET_DBSTATS       =   8;
+    const TYPE_START_CMP_ACK     =  16;
+    const TYPE_UPLOAD_CMP_ACK    =  17;
+    const TYPE_CMP_COMPLETED     =  18;
+    const TYPE_UPLOAD_SRCH_ACK   =  33;
+    const TYPE_UPLOAD_SRCH_ERR   =  34;
+    const TYPE_SRCH_IN_PROGRESS  =  65;
+    const TYPE_SRCH_FAILED       =  66;
+    const TYPE_SRCH_COMPLETED    =  67;
+    const TYPE_CAPTURED_FACES    =  80;
+    const TYPE_RECOGNITION_STATS = 128;
+    const TYPE_GET_MATCHED_FACES = 129;
+    const TYPE_QUERY_FACES       = 192;
+    const TYPE_QF_STATUS         = 193;
+    const TYPE_QF_RESULT         = 194;
+    const TYPE_GET_FSTATS        = 200;
+    const TYPE_FSTATS_RESULT     = 201;
 
     protected $ans_type;
     protected $client_id;

@@ -2,6 +2,6 @@
 
 namespace WildWolf\FBR\Response;
 
-class UploadError extends Base
+class SearchUploadError extends Base
 {
 }

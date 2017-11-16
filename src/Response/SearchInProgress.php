@@ -2,7 +2,7 @@
 
 namespace WildWolf\FBR\Response;
 
-class InProgress extends Base
+class SearchInProgress extends Base
 {
     public function cacheable() : bool
     {

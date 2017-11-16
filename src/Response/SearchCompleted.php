@@ -2,7 +2,7 @@
 
 namespace WildWolf\FBR\Response;
 
-class ResultReady extends Base implements \Countable, \Iterator, \ArrayAccess
+class SearchCompleted extends Base implements \Countable, \Iterator, \ArrayAccess
 {
     use ArrayTraits;
 

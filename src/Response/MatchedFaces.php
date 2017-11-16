@@ -2,7 +2,7 @@
 
 namespace WildWolf\FBR\Response;
 
-class Match extends Base implements \Countable, \Iterator, \ArrayAccess
+class MatchedFaces extends Base implements \Countable, \Iterator, \ArrayAccess
 {
     use ArrayTraits;
 

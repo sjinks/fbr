@@ -3,8 +3,6 @@
 namespace WildWolf\FBR;
 
 use WildWolf\FBR\ResponseFactory;
-use WildWolf\FBR\Response\Base;
-use WildWolf\FBR\Response\InProgress;
 
 abstract class ClientBase
 {
@@ -136,7 +134,6 @@ abstract class ClientBase
     /**
      * @param array $request
      * @throws \WildWolf\FBR\Exception
-     * @return \WildWolf\FBR\Response\UploadAck|\WildWolf\FBR\Response\UploadError|\WildWolf\FBR\Response\InProgress|\WildWolf\FBR\Response\Failed|\WildWolf\FBR\Response\ResultReady|\WildWolf\FBR\Response\Stats|\WildWolf\FBR\Response\MatchStats|\WildWolf\FBR\Response\Match|\WildWolf\FBR\Response\Base
      */
     protected function sendRequest(array $request)
     {
@@ -182,6 +179,14 @@ abstract class ClientBase
         return $result;
     }
 
+    /**
+     * Encodes the image in $r as base64
+     * If $r is a stream, no additional transformations are performed.
+     * If $r is a gd resource, it is transformed to JPEG image with interlace bit set to off.
+     *
+     * @param mixed $r
+     * @return string|NULL
+     */
     protected static function resourceToBase64($r)
     {
         switch (get_resource_type($r)) {
@@ -190,6 +195,7 @@ abstract class ClientBase
 
             case 'gd':
                 ob_start();
+                imageinterlace($r, 0);
                 imagejpeg($r);
                 return base64_encode(ob_get_clean());
         }
@@ -209,6 +215,13 @@ abstract class ClientBase
 
         if ($r instanceof \Imagick) {
             $r->setImageFormat('jpeg');
+            $r->setImageInterlaceScheme(\Imagick::INTERLACE_NO);
+
+            $csf = $r->GetImageProperty('jpeg:sampling-factor');
+            if (!preg_match('/^(?:2x[12]|4x[12]):1x1:1x1$/', $csf)) {
+                $r->SetImageProperty('jpeg:sampling-factor', '4:2:2');
+            }
+
             return base64_encode($r->getImageBlob());
         }
 

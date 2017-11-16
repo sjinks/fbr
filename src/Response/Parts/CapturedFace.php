@@ -4,7 +4,7 @@ namespace WildWolf\FBR\Response\Parts;
 
 use WildWolf\FBR\FaceTraits;
 
-class RecognizedFace
+class CapturedFace
 {
     use FaceTraits;
 
