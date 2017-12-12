@@ -1,6 +1,8 @@
 <?php
 
-namespace WildWolf\FBR\Response;
+namespace WildWolf\FBR\Response\Service;
+
+use WildWolf\FBR\Response\Base;
 
 class QueryFacesAck extends Base
 {

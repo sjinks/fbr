@@ -1,6 +1,9 @@
 <?php
 
-namespace WildWolf\FBR\Response;
+namespace WildWolf\FBR\Response\Service;
+
+use WildWolf\FBR\Response\ArrayTraits;
+use WildWolf\FBR\Response\Base;
 
 class QueryFacesResult extends Base
 {

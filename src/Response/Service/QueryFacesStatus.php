@@ -1,6 +1,8 @@
 <?php
 
-namespace WildWolf\FBR\Response;
+namespace WildWolf\FBR\Response\Service;
+
+use WildWolf\FBR\Response\Base;
 
 class QueryFacesStatus extends Base
 {
@@ -17,7 +19,7 @@ class QueryFacesStatus extends Base
 
     private function decodeList($encoded)
     {
-        $decoded = array_map('trim', explode("\n", trim(base64_decode($encoded))));
+        $decoded = explode("\n", rtrim(base64_decode($encoded), "\r\n"));
         $list    = [];
         foreach ($decoded as $x) {
             list($segment, $bank, $id, $intname, $name) = explode('*', $x);
