@@ -13,6 +13,8 @@ class SvcClient extends ClientBase
     const CMD_PREPARE_ADD_STATUS = 205;
     const CMD_PREPARE_GET_FACES  = 206;
     const CMD_ADD_FACES          = 207;
+    const CMD_DELETE_FACES       = 208;
+    const CMD_DELETE_RESULT      = 209;
 
     protected function encodeRequest(array $request) : string
     {
@@ -191,5 +193,44 @@ class SvcClient extends ClientBase
         ];
 
         return $this->sendRequest($request);
+    }
+
+    public function deleteFaces(array $list)
+    {
+        $list = join("\n", $list);
+
+        $request = [
+            'req_type'  => self::CMD_DELETE_FACES,
+            'data'      => [
+                'reqID_serv'   => '',
+                'segment'      => '',
+                'foto'         => base64_encode($list),
+                'ResultNumber' => 0,
+                'par1'         => 0,
+                'par2'         => 0,
+                'comment'      => '',
+            ],
+        ];
+
+        return $this->sendRequest($request);
+    }
+
+    public function getDeleteResult(string $guid)
+    {
+        $key     = self::CMD_DELETE_RESULT . '_' . $guid;
+        $request = [
+            'req_type'  => self::CMD_DELETE_RESULT,
+            'data'      => [
+                'reqID_serv'   => $guid,
+                'segment'      => '',
+                'foto'         => '',
+                'ResultNumber' => 0,
+                'par1'         => 0,
+                'par2'         => 0,
+                'comment'      => '',
+            ],
+        ];
+
+        return $this->maybeSendRequest($key, $request);
     }
 }
