@@ -2,8 +2,6 @@
 
 namespace WildWolf\FBR;
 
-use WildWolf\FBR\Response\Base;
-
 class Client extends ClientBase
 {
     const CMD_GET_DBSTATS    = 8;

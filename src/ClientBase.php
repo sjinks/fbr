@@ -2,8 +2,6 @@
 
 namespace WildWolf\FBR;
 
-use WildWolf\FBR\ResponseFactory;
-
 abstract class ClientBase
 {
     /**
