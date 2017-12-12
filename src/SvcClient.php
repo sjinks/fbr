@@ -9,6 +9,10 @@ class SvcClient extends ClientBase
     const CMD_QF_RESULT          = 194;
     const CMD_QUERY_FACE_STATS   = 200;
     const CMD_FACE_STATS_RESULTS = 201;
+    const CMD_PREPARE_ADD        = 204;
+    const CMD_PREPARE_ADD_STATUS = 205;
+    const CMD_PREPARE_GET_FACES  = 206;
+    const CMD_ADD_FACES          = 207;
 
     protected function encodeRequest(array $request) : string
     {
@@ -106,5 +110,86 @@ class SvcClient extends ClientBase
         ];
 
         return $this->maybeSendRequest($key, $request);
+    }
+
+    public function preparePhotoForAddition($r, int $segment, string $sector, string $filename)
+    {
+        $data = self::prepareFile($r);
+        if (empty($data)) {
+            throw new \InvalidArgumentException();
+        }
+
+        $request = [
+            'req_type'  => self::CMD_PREPARE_ADD,
+            'data'      => [
+                'reqID_serv'   => "",
+                'segment'      => $segment,
+                'foto'         => $data,
+                'ResultNumber' => 0,
+                'par1'         => 0,
+                'par2'         => 0,
+                'comment'      => $sector . '<' . $filename,
+            ],
+        ];
+
+        return $this->sendRequest($request);
+    }
+
+    public function getPreparationStatus(string $guid)
+    {
+        $key     = self::CMD_PREPARE_ADD_STATUS . '_' . $guid;
+        $request = [
+            'req_type'  => self::CMD_PREPARE_ADD_STATUS,
+            'data'      => [
+                'reqID_serv'   => $guid,
+                'segment'      => '',
+                'foto'         => '',
+                'ResultNumber' => 0,
+                'par1'         => 0,
+                'par2'         => 0,
+                'comment'      => '',
+            ],
+        ];
+
+        return $this->maybeSendRequest($key, $request);
+    }
+
+    public function getCapturedFaces(string $guid)
+    {
+        $key     = self::CMD_PREPARE_GET_FACES . '_' . $guid;
+        $request = [
+            'req_type'  => self::CMD_PREPARE_GET_FACES,
+            'data'      => [
+                'reqID_serv'   => $guid,
+                'segment'      => '',
+                'foto'         => '',
+                'ResultNumber' => 0,
+                'par1'         => 0,
+                'par2'         => 0,
+                'comment'      => '',
+            ],
+        ];
+
+        return $this->maybeSendRequest($key, $request);
+    }
+
+    public function addFaces(string $guid, array $list = null)
+    {
+        $list = (null === $list) ? 1 : join('*', $list);
+
+        $request = [
+            'req_type'  => self::CMD_ADD_FACES,
+            'data'      => [
+                'reqID_serv'   => $guid,
+                'segment'      => '',
+                'foto'         => base64_encode($list),
+                'ResultNumber' => 0,
+                'par1'         => 0,
+                'par2'         => 0,
+                'comment'      => '',
+            ],
+        ];
+
+        return $this->sendRequest($request);
     }
 }
