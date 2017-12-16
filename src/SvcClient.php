@@ -21,7 +21,7 @@ class SvcClient extends ClientBase
         return "0\r\n" . parent::encodeRequest($request) . "\r\n0\r\n\r\n";
     }
 
-    public function queryFaces(string $sector, int $segment = 0)
+    public function queryFaces(string $sector, int $segment)
     {
         $request = [
             'req_type'  => self::CMD_QUERY_FACES,
@@ -39,14 +39,14 @@ class SvcClient extends ClientBase
         return $this->sendRequest($request);
     }
 
-    public function getQFStatus(string $guid, int $segment = 0)
+    public function getQFStatus(string $guid)
     {
-        $key     = self::CMD_QF_STATUS . '_' . $guid . '_' . $segment;
+        $key     = self::CMD_QF_STATUS . '_' . $guid;
         $request = [
             'req_type'  => self::CMD_QF_STATUS,
             'data'      => [
                 'reqID_serv'   => $guid,
-                'segment'      => $segment,
+                'segment'      => '',
                 'foto'         => '',
                 'ResultNumber' => 0,
                 'par1'         => 0,
@@ -58,14 +58,14 @@ class SvcClient extends ClientBase
         return $this->maybeSendRequest($key, $request);
     }
 
-    public function getQFResult(string $guid, int $segment = 0, int $start = 1, int $count = -1)
+    public function getQFResult(string $guid, int $start = 1, int $count = -1)
     {
-        $key     = self::CMD_QF_RESULT . '_' . $guid . '_' . $segment . '_' . $start . '_' . $count;
+        $key     = self::CMD_QF_RESULT . '_' . $guid . '_' . $start . '_' . $count;
         $request = [
             'req_type'  => self::CMD_QF_RESULT,
             'data'      => [
                 'reqID_serv'   => $guid,
-                'segment'      => $segment,
+                'segment'      => '',
                 'foto'         => '',
                 'ResultNumber' => 0,
                 'par1'         => $start,
@@ -77,7 +77,7 @@ class SvcClient extends ClientBase
         return $this->maybeSendRequest($key, $request);
     }
 
-    public function queryFaceStats(int $segment = 0)
+    public function queryFaceStats(int $segment)
     {
         $request = [
             'req_type'  => self::CMD_QUERY_FACE_STATS,
@@ -95,14 +95,14 @@ class SvcClient extends ClientBase
         return $this->sendRequest($request);
     }
 
-    public function getFaceStatsResult(string $guid, int $segment = 0)
+    public function getFaceStatsResult(string $guid)
     {
-        $key     = self::CMD_FACE_STATS_RESULTS . '_' . $guid . '_' . $segment;
+        $key     = self::CMD_FACE_STATS_RESULTS . '_' . $guid;
         $request = [
             'req_type'  => self::CMD_FACE_STATS_RESULTS,
             'data'      => [
                 'reqID_serv'   => $guid,
-                'segment'      => $segment,
+                'segment'      => '',
                 'foto'         => '',
                 'ResultNumber' => 0,
                 'par1'         => 0,
