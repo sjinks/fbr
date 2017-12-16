@@ -40,7 +40,7 @@ class CapturedFaces extends Base implements \Countable, \Iterator, \ArrayAccess
 
     public function isSuccess() : bool
     {
-        return 1 == $this->resultCode();
+        return 3 == $this->resultCode();
     }
 
     public function isFailure() : bool
