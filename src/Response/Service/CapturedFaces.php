@@ -14,16 +14,18 @@ class CapturedFaces extends Base implements \Countable, \Iterator, \ArrayAccess
         parent::__construct($data);
 
         $faces = [];
-        foreach ($this->fotos as $x) {
-            $idx  = (int)$x->par1;
-            $face = (string)$x->foto;
+        if ($this->isSuccess()) {
+            foreach ($this->fotos as $x) {
+                $idx  = (int)$x->par1;
+                $face = (string)$x->foto;
 
-            $faces[$idx] = new Parts\CapturedFace($face);
+                $faces[$idx] = new Parts\CapturedFace($face);
+            }
+
+            ksort($faces);
         }
 
-        ksort($faces);
         $this->fotos = $faces;
-
     }
 
     public function getNumberOfCapturedFaces() : int

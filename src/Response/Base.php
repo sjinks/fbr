@@ -25,6 +25,8 @@ class Base
     const TYPE_PREPARE_ADD_STATUS = 205;
     const TYPE_PREPARE_GET_FACES  = 206;
     const TYPE_ADD_FACES          = 207;
+    const TYPE_DELETE_ACK         = 208;
+    const TYPE_DELETE_STATUS      = 209;
 
     protected $ans_type;
     protected $client_id;

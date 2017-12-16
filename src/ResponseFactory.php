@@ -24,6 +24,8 @@ use WildWolf\FBR\Response\Service\PrepareAddAck;
 use WildWolf\FBR\Response\Service\PrepareAddStatus;
 use WildWolf\FBR\Response\Service\CapturedFaces as PrepareCapturedFaces;
 use WildWolf\FBR\Response\Service\AddFacesAck;
+use WildWolf\FBR\Response\Service\DeleteAck;
+use WildWolf\FBR\Response\Service\DeleteStatus;
 
 class ResponseFactory
 {
@@ -56,6 +58,9 @@ class ResponseFactory
             case Base::TYPE_PREPARE_ADD_STATUS: return new PrepareAddStatus($data);
             case Base::TYPE_PREPARE_GET_FACES:  return new PrepareCapturedFaces($data);
             case Base::TYPE_ADD_FACES:          return new AddFacesAck($data);
+
+            case Base::TYPE_DELETE_ACK:         return new DeleteAck($data);
+            case Base::TYPE_DELETE_STATUS:      return new DeleteStatus($data);
 
             default:                            return new Base($data);
         }
