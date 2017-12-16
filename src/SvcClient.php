@@ -175,7 +175,7 @@ class SvcClient extends ClientBase
 
     public function addFaces(string $guid, array $list = null)
     {
-        $list = (null === $list) ? 1 : join('*', $list);
+        $list = (null === $list) ? -1 : join('*', $list);
 
         $request = [
             'req_type'  => self::CMD_ADD_FACES,
