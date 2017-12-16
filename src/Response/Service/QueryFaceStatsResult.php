@@ -11,7 +11,7 @@ class QueryFaceStatsResult extends Base
     public function __construct(\stdClass $data)
     {
         parent::__construct($data);
-        if ($this->resultCode() == 3 && !empty($this->fotos[0]->foto)) {
+        if ($this->isSuccess() && !empty($this->fotos[0]->foto)) {
             $this->decodeList($this->fotos[0]->foto);
         }
     }
@@ -31,6 +31,11 @@ class QueryFaceStatsResult extends Base
     public function pending() : bool
     {
         return $this->resultCode() == 2;
+    }
+
+    public function isSuccess()
+    {
+        return $this->resultCode() == 3;
     }
 
     public function cacheable() : bool
