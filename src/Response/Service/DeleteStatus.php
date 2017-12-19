@@ -19,7 +19,7 @@ class DeleteStatus extends Base
 
     private function decodeList($encoded)
     {
-        $this->list = explode("\n", rtrim(base64_decode($encoded), "\r\n"));
+        $this->list = preg_split('/[\\r\\n]+/', base64_decode($encoded), -1, PREG_SPLIT_NO_EMPTY);
     }
 
     public function pending() : bool

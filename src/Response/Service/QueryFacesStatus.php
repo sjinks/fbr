@@ -19,7 +19,7 @@ class QueryFacesStatus extends Base
 
     private function decodeList($encoded)
     {
-        $decoded = explode("\n", rtrim(base64_decode($encoded), "\r\n"));
+        $decoded = preg_split('/[\\r\\n]+/', base64_decode($encoded), -1, PREG_SPLIT_NO_EMPTY);
         $list    = [];
         foreach ($decoded as $x) {
             list($segment, $bank, $id, $intname, $name) = explode('*', $x);
