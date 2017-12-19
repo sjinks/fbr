@@ -4,13 +4,12 @@ namespace WildWolf\FBR;
 
 class Client extends ClientBase
 {
-    const CMD_GET_DBSTATS    = 8;
-    const CMD_START_CMP      = 16;
-    const CMD_UPLOAD_REF     = 17;
-    const CMD_CMP_RESULTS    = 18;
-    const CMD_UPLOAD_SRCH    = 32;
-    const CMD_SRCH_STATUS    = 64;
-    const CMD_CAPTURED_FACES = 80;
+    const CMD_START_CMP      =  16;
+    const CMD_UPLOAD_REF     =  17;
+    const CMD_CMP_RESULTS    =  18;
+    const CMD_UPLOAD_SRCH    =  32;
+    const CMD_SRCH_STATUS    =  64;
+    const CMD_CAPTURED_FACES =  80;
     const CMD_RCGN_STATS     = 128;
     const CMD_MATCHED_FACES  = 129;
 
@@ -229,23 +228,5 @@ class Client extends ClientBase
         ];
 
         return $this->maybeSendRequest($key, $request);
-    }
-
-    public function dbStats()
-    {
-        $request = [
-            'req_type'  => self::CMD_GET_DBSTATS,
-            'data'      => [
-                'reqID_serv'   => '',
-                'segment'      => 0,
-                'foto'         => '',
-                'ResultNumber' => 0,
-                'par1'         => 0,
-                'par2'         => 0,
-                'comment'      => '',
-            ],
-        ];
-
-        return $this->sendRequest($request);
     }
 }

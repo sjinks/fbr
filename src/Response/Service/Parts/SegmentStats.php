@@ -1,6 +1,6 @@
 <?php
 
-namespace WildWolf\FBR\Response\Parts;
+namespace WildWolf\FBR\Response\Service\Parts;
 
 class SegmentStats
 {

@@ -1,8 +1,14 @@
 <?php
 
-namespace WildWolf\FBR\Response;
+namespace WildWolf\FBR\Response\Service;
 
-class DBStats extends Base implements \Countable, \Iterator, \ArrayAccess
+use WildWolf\FBR\Response\ArrayTraits;
+use WildWolf\FBR\Response\Base;
+
+/**
+ * Response Type: 8
+ */
+class QuerySegmentsResult extends Base implements \Countable, \Iterator, \ArrayAccess
 {
     use ArrayTraits;
 

@@ -2,12 +2,9 @@
 
 namespace WildWolf\FBR\Response\Service;
 
-use WildWolf\FBR\Response\Base;
-
-class PrepareAddAck extends Base
+/**
+ * Response Type: 204
+ */
+class PrepareAddAck extends SvcBaseAck
 {
-    public function cacheable() : bool
-    {
-        return false;
-    }
 }

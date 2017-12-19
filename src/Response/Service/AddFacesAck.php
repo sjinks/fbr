@@ -2,22 +2,13 @@
 
 namespace WildWolf\FBR\Response\Service;
 
-use WildWolf\FBR\Response\Base;
-
-class AddFacesAck extends Base
+/**
+ * Response Type: 207
+ */
+class AddFacesAck extends SvcBaseAck
 {
-    public function cacheable() : bool
+    public function accepted() : bool
     {
-        return false;
-    }
-
-    public function isSuccess() : bool
-    {
-        return 1 == $this->resultCode();
-    }
-
-    public function isFailure() : bool
-    {
-        return 2 == $this->resultCode();
+        return 4 == $this->result_code;
     }
 }

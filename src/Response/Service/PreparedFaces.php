@@ -3,9 +3,11 @@
 namespace WildWolf\FBR\Response\Service;
 
 use WildWolf\FBR\Response\ArrayTraits;
-use WildWolf\FBR\Response\Base;
 
-class CapturedFaces extends Base implements \Countable, \Iterator, \ArrayAccess
+/**
+ * Response Type: 206
+ */
+class PreparedFaces extends SvcBase implements \Countable, \Iterator, \ArrayAccess
 {
     use ArrayTraits;
 
@@ -31,20 +33,5 @@ class CapturedFaces extends Base implements \Countable, \Iterator, \ArrayAccess
     public function getNumberOfCapturedFaces() : int
     {
         return (int)$this->resultsAmount();
-    }
-
-    public function cacheable() : bool
-    {
-        return $this->isSuccess() || $this->isFailure();
-    }
-
-    public function isSuccess() : bool
-    {
-        return 3 == $this->resultCode();
-    }
-
-    public function isFailure() : bool
-    {
-        return 2 == $this->resultCode();
     }
 }

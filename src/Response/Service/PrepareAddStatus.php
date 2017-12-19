@@ -2,13 +2,15 @@
 
 namespace WildWolf\FBR\Response\Service;
 
-use WildWolf\FBR\Response\Base;
-
-class PrepareAddStatus extends Base
+/**
+ * Response Type: 205
+ */
+class PrepareAddStatus extends SvcBase
 {
-    public function cacheable() : bool
+    public function pending() : bool
     {
-        return $this->resultCode() == 3;
+        $rc = $this->resultCode();
+        return $rc == 2 || $rc == 4;
     }
 
     public function getNumberOfCapturedFaces() : int

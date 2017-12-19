@@ -4,29 +4,31 @@ namespace WildWolf\FBR\Response;
 
 class Base
 {
-    const TYPE_GET_DBSTATS        =   8;
-    const TYPE_START_CMP_ACK      =  16;
-    const TYPE_UPLOAD_CMP_ACK     =  17;
-    const TYPE_CMP_COMPLETED      =  18;
-    const TYPE_UPLOAD_SRCH_ACK    =  33;
-    const TYPE_UPLOAD_SRCH_ERR    =  34;
-    const TYPE_SRCH_IN_PROGRESS   =  65;
-    const TYPE_SRCH_FAILED        =  66;
-    const TYPE_SRCH_COMPLETED     =  67;
-    const TYPE_CAPTURED_FACES     =  80;
-    const TYPE_RECOGNITION_STATS  = 128;
-    const TYPE_GET_MATCHED_FACES  = 129;
-    const TYPE_QUERY_FACES        = 192;
-    const TYPE_QF_STATUS          = 193;
-    const TYPE_QF_RESULT          = 194;
-    const TYPE_GET_FSTATS         = 200;
-    const TYPE_FSTATS_RESULT      = 201;
-    const TYPE_PREPARE_ADD        = 204;
-    const TYPE_PREPARE_ADD_STATUS = 205;
-    const TYPE_PREPARE_GET_FACES  = 206;
-    const TYPE_ADD_FACES          = 207;
-    const TYPE_DELETE_ACK         = 208;
-    const TYPE_DELETE_STATUS      = 209;
+    const TYPE_BASE_STATUS           =   8;
+
+    const TYPE_START_CMP_ACK         =  16;
+    const TYPE_UPLOAD_CMP_ACK        =  17;
+    const TYPE_CMP_COMPLETED         =  18;
+    const TYPE_UPLOAD_SRCH_ACK       =  33;
+    const TYPE_UPLOAD_SRCH_ERR       =  34;
+    const TYPE_SRCH_IN_PROGRESS      =  65;
+    const TYPE_SRCH_FAILED           =  66;
+    const TYPE_SRCH_COMPLETED        =  67;
+    const TYPE_CAPTURED_FACES        =  80;
+    const TYPE_RECOGNITION_STATS     = 128;
+    const TYPE_GET_MATCHED_FACES     = 129;
+
+    const TYPE_SECTOR_REQUEST_ACK    = 192;
+    const TYPE_SECTOR_REQUEST_STATUS = 193;
+    const TYPE_SECTOR_REQUEST_RESULT = 194;
+    const TYPE_SECTOR_STATS_ACK      = 200;
+    const TYPE_SECTOR_STATS_RESULT   = 201;
+    const TYPE_PREPARE_ADD           = 204;
+    const TYPE_PREPARE_ADD_STATUS    = 205;
+    const TYPE_PREPARE_GET_FACES     = 206;
+    const TYPE_ADD_FACES             = 207;
+    const TYPE_DELETE_ACK            = 208;
+    const TYPE_DELETE_STATUS         = 209;
 
     protected $ans_type;
     protected $client_id;

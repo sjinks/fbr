@@ -2,12 +2,9 @@
 
 namespace WildWolf\FBR\Response\Service;
 
-use WildWolf\FBR\Response\Base;
-
-class DeleteAck extends Base
+/**
+ * Response Type: 208
+ */
+class DeleteAck extends SvcBaseAck
 {
-    public function cacheable() : bool
-    {
-        return false;
-    }
 }
