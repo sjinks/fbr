@@ -177,7 +177,7 @@ class SvcClient extends ClientBase
         $request = [
             'req_type'  => self::CMD_INSERT_INIT,
             'data'      => [
-                'reqID_serv'   => "",
+                'reqID_serv'   => '',
                 'segment'      => $segment,
                 'foto'         => $data,
                 'ResultNumber' => 0,
