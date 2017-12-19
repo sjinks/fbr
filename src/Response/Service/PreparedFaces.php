@@ -16,7 +16,7 @@ class PreparedFaces extends SvcBase implements \Countable, \Iterator, \ArrayAcce
         parent::__construct($data);
 
         $faces = [];
-        if ($this->isSuccess()) {
+        if ($this->succeeded()) {
             foreach ($this->fotos as $x) {
                 $idx  = (int)$x->par1;
                 $face = (string)$x->foto;

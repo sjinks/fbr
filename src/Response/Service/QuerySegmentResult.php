@@ -16,7 +16,7 @@ class QuerySegmentResult extends SvcBase implements \Countable, \Iterator, \Arra
         parent::__construct($data);
 
         $d = [];
-        if ($this->fotos) {
+        if (!empty($this->fotos)) {
             foreach ($this->fotos as $x) {
                 $segment  = (int)$x->par1;
                 $size     = (int)$x->par2;

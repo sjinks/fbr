@@ -16,7 +16,7 @@ class QuerySectorResult extends SvcBase
         parent::__construct($data);
 
         $data = [];
-        if ($this->fotos) {
+        if (!empty($this->fotos)) {
             foreach ($this->fotos as $x) {
                 $idx       = (int)$x->par1 - 1;
                 $bank      = (int)$x->par2;

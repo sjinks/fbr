@@ -32,7 +32,7 @@ class ResponseFactory
     public static function create(\stdClass $data)
     {
         switch ($data->ans_type) {
-            case Base::TYPE_GET_DBSTATS:           return new QuerySegmentsResult($data);
+            case Base::TYPE_BASE_STATUS:           return new QuerySegmentsResult($data);
 
             case Base::TYPE_START_CMP_ACK:         return new StartCompareAck($data);
             case Base::TYPE_UPLOAD_CMP_ACK:        return new UploadCompareAck($data);
@@ -58,7 +58,7 @@ class ResponseFactory
             case Base::TYPE_INSERT_ACK:            return new PrepareAddAck($data);
             case Base::TYPE_INSERT_STATUS:         return new PrepareAddStatus($data);
             case Base::TYPE_INSERT_GET_FACES:      return new PreparedFaces($data);
-            case Base::TYPE_INSERT_PROCESS:        return new AddFacesAck($data);
+            case Base::TYPE_INSERT_PROCESS_ACK:    return new AddFacesAck($data);
 
             case Base::TYPE_DELETE_ACK:            return new DeleteAck($data);
             case Base::TYPE_DELETE_STATUS:         return new DeleteStatus($data);

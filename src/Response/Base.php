@@ -23,10 +23,10 @@ class Base
     const TYPE_SECTOR_REQUEST_RESULT = 194;
     const TYPE_SECTOR_STATS_ACK      = 200;
     const TYPE_SECTOR_STATS_RESULT   = 201;
-    const TYPE_PREPARE_ADD           = 204;
-    const TYPE_PREPARE_ADD_STATUS    = 205;
-    const TYPE_PREPARE_GET_FACES     = 206;
-    const TYPE_ADD_FACES             = 207;
+    const TYPE_INSERT_ACK            = 204;
+    const TYPE_INSERT_STATUS         = 205;
+    const TYPE_INSERT_GET_FACES      = 206;
+    const TYPE_INSERT_PROCESS_ACK    = 207;
     const TYPE_DELETE_ACK            = 208;
     const TYPE_DELETE_STATUS         = 209;
 
