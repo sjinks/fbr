@@ -11,6 +11,11 @@ class SvcBase extends Base
         return $this->resultCode() < 0;
     }
 
+    public function accepted() : bool
+    {
+        return $this->resultCode() == 1;
+    }
+
     public function pending() : bool
     {
         return $this->resultCode() == 2;
