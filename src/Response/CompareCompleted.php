@@ -25,6 +25,11 @@ class CompareCompleted extends Base implements \Countable, \Iterator, \ArrayAcce
         return $this->result_code == 2;
     }
 
+    public function succeeded() : bool
+    {
+        return $this->result_code == 3;
+    }
+
     public function cacheable() : bool
     {
         return ($this->result_code == 3) || ($this->result_code == -7);
