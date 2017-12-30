@@ -11,13 +11,17 @@ class Match
     private $number;
     private $similarity;
     private $path;
+    private $namef;
+    private $namel;
 
-    public function __construct(int $nr, int $similarity, string $face, string $path)
+    public function __construct(int $nr, int $similarity, string $face, string $path, string $namef, string $namel)
     {
         $this->number     = $nr;
         $this->similarity = $similarity;
         $this->face       = $face;
         $this->path       = $path;
+        $this->namef      = $namef;
+        $this->namel      = $namel;
     }
 
     public function faceNumber() : int
@@ -33,5 +37,15 @@ class Match
     public function path() : string
     {
         return $this->path;
+    }
+
+    public function namef() : string
+    {
+        return $this->namef;
+    }
+
+    public function namel() : string
+    {
+        return $this->namel;
     }
 }

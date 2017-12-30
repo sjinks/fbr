@@ -17,8 +17,10 @@ class MatchedFaces extends Base implements \Countable, \Iterator, \ArrayAccess
             $similarity    = (int)$x->par3;
             $path          = (string)$x->path;
             $face          = (string)$x->foto;
+            $namef         = (string)$x->namef;
+            $namel         = (string)$x->namel;
 
-            $matches[$idx] = new Parts\Match($number, $similarity, $face, $path);
+            $matches[$idx] = new Parts\Match($number, $similarity, $face, $path, $namef, $namel);
         }
 
         ksort($matches);
