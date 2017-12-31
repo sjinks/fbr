@@ -215,12 +215,26 @@ abstract class ClientBase
         }
 
         if ($r instanceof \Imagick) {
-            $r->setImageFormat('jpeg');
-            $r->setImageInterlaceScheme(\Imagick::INTERLACE_NO);
+            $sf = $r->getimageproperty('jpeg:sampling-factor');
+            $q  = $r->getimagecompressionquality();
+            $f  = strtolower($r->getimageformat());
+            $il = $r->getimageinterlacescheme();
 
-            $csf = $r->GetImageProperty('jpeg:sampling-factor');
-            if (!preg_match('/^(?:2x[12]|4x[12]):1x1:1x1$/', $csf)) {
-                $r->SetImageProperty('jpeg:sampling-factor', '4:2:2');
+            $flag =
+                   ($f !== 'jpeg')                  // Not a JPEG
+                || empty($sf)                       // Unknown sampling factor
+                || (substr($sf, 0, 2) === '1x')     // Sampling factor is 4:4:x
+                || ($il != \Imagick::INTERLACE_NO)  // FBR does not accept interlacing
+            ;
+
+            if ($flag) {
+                $r->setimageformat('JPEG');
+                if ($q) {
+                    $r->setimagecompressionquality($q);
+                }
+
+                $r->setimageproperty('jpeg:sampling-factor', '4:2:0');
+                $r->setimageinterlacescheme(\Imagick::INTERLACE_NO);
             }
 
             return base64_encode($r->getImageBlob());
