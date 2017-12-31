@@ -145,8 +145,11 @@ abstract class ClientBase
         $this->prepareCurl($request);
 
         $response = $this->_curl->execute();
-        $code     = $this->_curl->info(CURLINFO_HTTP_CODE);
+        if (false === $response) {
+            throw new Exception($this->_curl->error(), $this->_curl->errno() + 1000);
+        }
 
+        $code = $this->_curl->info(CURLINFO_HTTP_CODE);
         if ($code === 200) {
             $obj = json_decode($response);
             if (isset($obj->ans_type)) {
