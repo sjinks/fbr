@@ -5,7 +5,7 @@ namespace WildWolf\FBR\Response\Service;
 use WildWolf\FBR\Response\ArrayTraits;
 
 /**
- * Response Type: 193
+ * Response Type: 201
  */
 class QuerySegmentResult extends SvcBase implements \Countable, \Iterator, \ArrayAccess
 {

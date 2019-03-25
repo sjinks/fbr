@@ -3,7 +3,7 @@
 namespace WildWolf\FBR\Response\Service;
 
 /**
- * Response Type: 192
+ * Response Type: 200
  */
 class QuerySegmentAck extends SvcBaseAck
 {

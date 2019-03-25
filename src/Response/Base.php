@@ -70,7 +70,7 @@ class Base
         return $this->reqID_serv;
     }
 
-    public function clientReqiestId() : string
+    public function clientRequestId() : string
     {
         return $this->reqID_clnt;
     }
